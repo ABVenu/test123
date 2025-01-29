@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat App</title>
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <h2>Chat Application</h2>
+
+    <label>Select Role:</label>
+    <select id="roleSelect">
+      <option value="client">Client</option>
+      <option value="admin">Admin</option>
+    </select>
+    <button onclick="registerUser()">Register</button>
+
+    <div id="roomSection" style="display: none">
+      <input type="text" id="roomName" placeholder="Enter Room Name" />
+      <button onclick="joinRoom()">Join Room</button>
+    </div>
+
+    <div id="clientMessageSection">
+      <input type="text" id="message" placeholder="Type a message" />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <button
+      id="broadcastBtn"
+      onclick="broadcastMessage()"
+      style="display: none"
+    >
+      Broadcast
+    </button>
+
+    <ul id="messages"></ul>
+
+    <script>
+      const socket = io();
+      let role = "client";
+      let currentRoom = "";
+      let clientId = "";
+
+      function registerUser() {
+        role = document.getElementById("roleSelect").value;
+        socket.emit("register", role);
+
+        if (role === "admin") {
+          document.getElementById("broadcastBtn").style.display = "inline";
+        } else {
+          document.getElementById("roomSection").style.display = "block";
+        }
+      }
+
+      function sendMessage() {
+        const message = document.getElementById("message").value;
+
+        if (role === "admin") {
+          // Admin replying to a specific client
+          const to = prompt("Enter Client ID to reply:");
+          socket.emit("private_message", { to, message });
+        } else if (currentRoom) {
+          // Client sending message to room
+          socket.emit("room_message", { room: currentRoom, message });
+        } else {
+          // Client sending message to admin
+          socket.emit("private_message", { to: "admin", message });
+        }
+      }
+
+      function joinRoom() {
+        currentRoom = document.getElementById("roomName").value;
+        socket.emit("join_room", currentRoom);
+      }
+
+      function broadcastMessage() {
+        const message = document.getElementById("message").value;
+        socket.emit("broadcast", message);
+      }
+
+      socket.on("message", (data) => {
+        const li = document.createElement("li");
+        li.innerText = `${data.from}: ${data.message}`;
+        document.getElementById("messages").appendChild(li);
+      });
+
+      socket.on("client_id", (id) => {
+        clientId = id;
+      });
+    </script>
+  </body>
+</html>
