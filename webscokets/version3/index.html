@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat Application</title>
+  </head>
+  <body>
+    <select name="" id="select">
+      <option value="">Choose User</option>
+      <option value="admin">Admin</option>
+      <option value="client">Client</option>
+    </select>
+    <hr />
+    <button onClick="registerFn()">Register</button>
+    <hr />
+    <input type="number" placeholder="Enter Room Number To Join" id="room" />
+    <button onclick="joinRoom()">Join the Room</button>
+    <hr />
+    <input type="text" placeholder="Enter Message" id="inbox" />
+    <button onclick="sendMessage()">Send Message</button>
+    <hr />
+    <button onClick="disconnectFn()">Disconnect</button>
+    <hr />
+    <input type="text" placeholder="Broadcast Message" id="broadcastMessage" />
+    <button onclick="sendBroadcastMessage()">Broadcast Message</button>
+
+    <!-- Display Chat History -->
+    <div id="chat-history">
+      <h3>Chat History</h3>
+      <ul id="chat-list"></ul>
+    </div>
+  </body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    let role = "";
+    let roomNumber = "";
+    let clientId = "";
+
+    function registerFn() {
+      let roleValue = document.getElementById("select").value;
+      role = roleValue;
+      socket.emit("register", roleValue);
+    }
+
+    function sendMessage() {
+      let message = document.getElementById("inbox").value;
+      let roomNumber = document.getElementById("room").value;
+      console.log(role, roomNumber, message);
+      if (role == "client" && roomNumber != "") {
+        socket.emit("room_message", { roomNumber, message });
+      } else if (role == "client" && roomNumber == "") {
+        socket.emit("private_message", { to: "admin", message });
+      }
+      document.getElementById("inbox").value = ""; // Clear input field
+    }
+
+    function sendBroadcastMessage() {
+      const broadcastMessage = document.getElementById("broadcastMessage").value;
+      if (role === "admin") {
+        socket.emit("broadcast_message", broadcastMessage);
+      }
+      document.getElementById("broadcastMessage").value = ""; // Clear input field
+    }
+
+    function joinRoom() {
+      roomNumber = document.getElementById("room").value;
+      socket.emit("join_room", roomNumber);
+    }
+
+    socket.on("client_id", (id) => {
+      clientId = id;
+      console.log("clientid", clientId);
+    });
+
+    // Display chat history for the current room
+    socket.on("updateChatHistory", (chatHistory) => {
+      const chatList = document.getElementById("chat-list");
+      chatList.innerHTML = ""; // Clear current chat history
+
+      // Loop through chat history and append each message to the list
+      chatHistory.forEach((msg) => {
+        const listItem = document.createElement("li");
+        listItem.textContent = `${msg.from}: ${msg.message}`;
+        chatList.appendChild(listItem);
+      });
+    });
+
+    // Admin message broadcast to all clients
+    socket.on("message", (msgData) => {
+      const chatList = document.getElementById("chat-list");
+      const listItem = document.createElement("li");
+      listItem.textContent = `${msgData.from}: ${msgData.message}`;
+      chatList.appendChild(listItem);
+    });
+
+    function disconnectFn() {
+      console.log("clicked");
+      socket.disconnect();
+    }
+  </script>
+</html>
