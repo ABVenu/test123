@@ -1,6 +1,10 @@
-npm init -y
-npm install typescript ts-node
-tsc --init
+- npm init -y
+  
+- npm install typescript ts-node
+  
+- tsc --init
+
+```
 {
   "compilerOptions": {
     "target": "ES6",
@@ -10,15 +14,16 @@ tsc --init
     "strict": true
   }
 }
+```
 
-npx ts-node src/index.ts
+- npx ts-node src/index.ts
 
 or 
 
-tsc
-node dist/index.js
+- tsc
+- node dist/index.js
 
 
-.gitignore
-node_modules/
-dist/
+- .gitignore
+   node_modules/
+   dist/
