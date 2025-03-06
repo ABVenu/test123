@@ -7,10 +7,10 @@
 ```
 {
   "compilerOptions": {
-    "target": "ES6",
-    "module": "CommonJS",
+    "rootDir": "./src",
     "outDir": "./dist",
-    "rootDir": "./",
+    "module": "CommonJS",
+    "target": "ES6",
     "strict": true
   }
 }
