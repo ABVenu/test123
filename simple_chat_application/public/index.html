@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Simple Chat</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+        max-width: 600px;
+        margin: 20px auto;
+      }
+      #chat {
+        display: none;
+      }
+      #messages {
+        border: 1px solid #ccc;
+        height: 200px;
+        overflow-y: scroll;
+        margin-bottom: 10px;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Simple Chat App 🗨️</h2>
+
+    <div id="login">
+      <input type="text" id="username" placeholder="Enter username" />
+      <button onclick="joinChat()">Join Chat</button>
+    </div>
+
+    <div id="chat">
+      <h4>Online Users</h4>
+      <ul id="usersList"></ul>
+
+      <h4>Chat With: <span id="chatWith"></span></h4>
+      <div id="messages"></div>
+      <input type="text" id="message" placeholder="Type a message..." />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+      const socket = io();
+      let myUsername = "";
+      let chattingWith = "";
+
+      function joinChat() {
+        myUsername = document.getElementById("username").value.trim();
+        if (!myUsername) return alert("Enter your name");
+        socket.emit("register", myUsername);
+        document.getElementById("login").style.display = "none";
+        document.getElementById("chat").style.display = "block";
+      }
+
+      socket.on("onlineUsers", (users) => {
+        const ul = document.getElementById("usersList");
+        ul.innerHTML = "";
+        users.forEach(([username, _]) => {
+          if (username !== myUsername) {
+            const li = document.createElement("li");
+            li.innerHTML = `<button onclick="startChat('${username}')">${username}</button>`;
+            ul.appendChild(li);
+          }
+        });
+      });
+
+      function startChat(username) {
+        chattingWith = username;
+        document.getElementById("chatWith").textContent = username;
+        document.getElementById("messages").innerHTML = "";
+      }
+
+      function sendMessage() {
+        const msg = document.getElementById("message").value.trim();
+        if (!msg || !chattingWith) return;
+        socket.emit("privateMessage", {
+          fromUsername: myUsername,
+          toUsername: chattingWith,
+          content: msg,
+        });
+        appendMessage("Me", msg);
+        document.getElementById("message").value = "";
+      }
+
+      socket.on("newMessage", ({ fromUsername, content }) => {
+        appendMessage(fromUsername, content);
+      });
+
+      function appendMessage(sender, content) {
+        const div = document.createElement("div");
+        div.textContent = `${sender}: ${content}`;
+        document.getElementById("messages").appendChild(div);
+      }
+
+      function startChat(username) {
+        chattingWith = username;
+        document.getElementById("chatWith").textContent = username;
+        document.getElementById("messages").innerHTML = "";
+        socket.emit("getChatHistory", {
+          userA: myUsername,
+          userB: chattingWith,
+        });
+      }
+
+      socket.on("chatHistory", (history) => {
+        history.forEach(({ fromUsername, content }) => {
+          appendMessage(fromUsername, content);
+        });
+      });
+    </script>
+  </body>
+</html>
