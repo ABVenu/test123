@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Chat App</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="chat-container">
+      <h2>Chat Application</h2>
+      <div class="username-section">
+        <input id="username" placeholder="Enter your name" />
+        <button onclick="registerUser()">Join Chat</button>
+      </div>
+      <div id="messages" class="messages"></div>
+      <div class="input-section">
+        <input id="messageInput" placeholder="Type a message..." />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script>
+      const socket = io("http://localhost:3000");
+      const messages = document.getElementById("messages");
+      const messageInput = document.getElementById("messageInput");
+      let registered = false;
+
+      function registerUser() {
+        const username = document.getElementById("username").value.trim();
+        if (!username) return alert("Please enter your name to join!");
+        socket.emit("register", username);
+        registered = true;
+        document.querySelector(".username-section").style.display = "none";
+        loadChats();
+      }
+
+      function sendMessage() {
+        if (!registered) return alert("Register your name first!");
+        const msg = messageInput.value.trim();
+        if (!msg) return;
+        socket.emit("sendMessage", msg);
+        messageInput.value = "";
+      }
+
+      function appendMessage(data) {
+        const item = document.createElement("div");
+        item.textContent = `${data.name}: ${data.message}`;
+        messages.appendChild(item);
+        messages.scrollTop = messages.scrollHeight;
+      }
+
+      socket.on("receiveMessage", (data) => {
+        appendMessage(data);
+      });
+
+      async function loadChats() {
+        const res = await fetch("http://localhost:3000/chats");
+        const history = await res.json();
+        history.forEach(appendMessage);
+      }
+
+      socket.on("chatHistory", (history) => {
+        messages.innerHTML = ""; // clear old messages
+        history.forEach((chat) => {
+          appendMessage(chat);
+        });
+      });
+    </script>
+  </body>
+</html>
