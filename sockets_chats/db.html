@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Socket Chat App</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="registration" class="registration">
+      <h2>Join Chat</h2>
+      <input type="text" id="usernameInput" placeholder="Enter your name" />
+      <button id="registerBtn">Join</button>
+    </div>
+
+    <div id="chatContainer" class="container hidden">
+      <div id="messages" class="messages"></div>
+      <form id="chatForm" class="chat-form">
+        <input
+          type="text"
+          id="messageInput"
+          placeholder="Type a message..."
+          autocomplete="off"
+        />
+        <button type="submit">Send</button>
+      </form>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script>
+      const socket = io("http://localhost:3000");
+
+      const messagesDiv = document.getElementById("messages");
+      const chatForm = document.getElementById("chatForm");
+      const messageInput = document.getElementById("messageInput");
+
+      const registerDiv = document.getElementById("registration");
+      const usernameInput = document.getElementById("usernameInput");
+      const registerBtn = document.getElementById("registerBtn");
+      const chatContainer = document.getElementById("chatContainer");
+
+      registerBtn.addEventListener("click", () => {
+        const username = usernameInput.value.trim();
+        if (username) {
+          socket.emit("register", username);
+          registerDiv.classList.add("hidden");
+          chatContainer.classList.remove("hidden");
+        }
+      });
+
+      const appendMessage = (data) => {
+        const item = document.createElement("div");
+        item.textContent = `${data.name || data.id}: ${data.message}`;
+        messagesDiv.appendChild(item);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      };
+
+      socket.on("chatHistory", (history) => {
+        messagesDiv.innerHTML = "";
+        history.forEach(appendMessage);
+      });
+
+      socket.on("receiveMessage", appendMessage);
+
+      chatForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const msg = messageInput.value.trim();
+        if (msg) {
+          socket.emit("sendMessage", msg);
+          messageInput.value = "";
+        }
+      });
+    </script>
+  </body>
+</html>
