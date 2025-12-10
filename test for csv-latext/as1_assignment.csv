@@ -1,0 +1,119 @@
+questionType,contentType,contentBody,intAnswer,prepTime(in_seconds),floatAnswer.max,floatAnswer.min,fitbAnswer,mcscAnswer,subjectiveAnswer,option.1,option.2,option.3,option.4,mcmcAnswer,tagRelationships,difficultyLevel,answerExplanation,
+mcsc,Text,Q1. What is the main purpose of NumPy in Python?,,,,,,2,,To create graphical user interfaces,To perform high-performance numerical computing with arrays,To manage databases,To build web applications,,,0.75,"NumPy is mainly used for fast, efficient numerical computing with arrays (vectors, matrices, tensors). It provides optimized array operations and mathematical functions, not GUIs, databases, or web apps.",
+mcsc,Text,Q2. Which object is the core data structure provided by NumPy?,,,,,,3,,list,tuple,ndarray,dict,,,0.75,"The core data structure in NumPy is the ndarray (N-dimensional array). Lists and tuples are Python built-ins, but NumPy’s power comes from ndarray.",
+mcsc,Text,Q3. What is the usual import convention for NumPy?,,,,,,2,,import numpy as num,import numpy as np,import np as numpy,import numpy,,,0.75,The standard convention is import numpy as np. This is used almost everywhere in documentation and code to keep expressions short and readable.,
+mcsc,Text,Q4. Which of the following will create a 1D NumPy array from a Python list lst?,,,,,,2,,np.list(lst),np.array(lst),np.arange(lst),np.asarray_list(lst),,,0.75,np.array(lst) converts a Python list into a NumPy array. The other options are either invalid or used for different purposes.,
+mcsc,Text,Q5. What does the attribute a.shape represent for a NumPy array a?,,,,,,3,,The data type of the array,The total number of elements,The dimensions (size along each axis),The memory address of the array,,,0.75,"a.shape returns a tuple describing the dimensions of the array (size along each axis), e.g., (4,) for a 1D array of length 4 or (2, 3) for a 2x3 matrix.",
+mcsc,Text,"Q6. Which function creates a 1D array [0, 1, 2, 3, 4]?",,,,,,1,,"np.arange(0, 5)","np.linspace(0, 5, 5)",np.zeros(5),np.ones(5),,,0.75,"np.arange(0, 5) generates [0, 1, 2, 3, 4]. linspace would include both endpoints by default, and zeros/ones fill arrays with 0 or 1, not a range.",
+mcsc,Text,Q7. Which command creates a 2x3 matrix of all zeros?,,,,,,2,,"np.zeros(3, 2)","np.zeros((2, 3))","np.zero(2, 3)","np.zeros[2, 3]",,,0.75,"np.zeros((2, 3)) creates a 2x3 matrix of zeros. The shape must be passed as a single tuple; np.zeros(3, 2) is invalid.",
+mcsc,Text,Q8. What does np.eye(3) return?,,,,,,3,,A 3-element vector of ones,A 3x3 matrix of zeros,A 3x3 identity matrix,A 3x3 matrix of random numbers,,,0.75,"np.eye(3) creates a 3x3 identity matrix with ones on the main diagonal and zeros elsewhere, commonly used in linear algebra.",
+mcsc,Text,Q9. Why is vectorized code in NumPy usually faster than Python for-loops?,,,,,,3,,It uses recursion internally,It runs in parallel by default on all CPUs,It uses optimized low-level C loops over contiguous memory,It automatically uses GPUs,,,0.75,"Vectorized NumPy operations are faster because they run in optimized low-level C loops over contiguous memory, reducing Python-level overhead. NumPy does not automatically use GPUs or parallelism for every operation.",
+mcsc,Text,"Q10. Given a = np.array([1, 2, 3]), what is the result of a * 2?",,,,,,4,,"[1, 2, 3, 1, 2, 3]",Error,"[3, 4, 5]","[2, 4, 6]",,,0.75,"For a = np.array([1, 2, 3]), a * 2 performs elementwise multiplication, giving [2, 4, 6]. It does not concatenate or shift the values.",
+mcsc,Text,Q11. Suppose M is a 2x3 matrix and v is a 1D array of length 3. What happens when you compute M + v (shapes are compatible)?,,,,,,1,,Elementwise addition using broadcasting,Matrix multiplication,Concatenation along rows,Raises a shape mismatch error,,,1,"When M (2x3) and v (length 3) are added, NumPy uses broadcasting to add v to each row of M elementwise. Shapes are compatible, so no error occurs.",
+mcsc,Text,Q12. Which function is best to generate 50 evenly spaced values between 0 and 1 (inclusive)?,,,,,,2,,"np.arange(0, 1, 50)","np.linspace(0, 1, 50)","np.range(0, 1, 50)","np.even(0, 1, 50)",,,1,"np.linspace(0, 1, 50) generates 50 evenly spaced values between 0 and 1 (including both endpoints). arange uses a step and may not hit exactly 1.0 due to floating-point issues.",
+mcsc,Text,"Q13. For a 2D array X of shape (4, 5), what does X.sum(axis=0) compute?",,,,,,3,,Sum of all elements,Sum of each row,Sum of each column,Sum of diagonal elements,,,1,"For a 2D array of shape (4, 5), X.sum(axis=0) sums over rows, giving the sum of each column. axis=1 would sum each row instead.",
+mcsc,Text,"Q14. Given x = np.array([5, 12, 7, 20]), what is x > 10?",,,,,,2,,A list of elements greater than 10,A boolean mask array,The index of the largest element,Always True,,,1,"x > 10 returns a boolean array (mask) with True where the condition is satisfied and False otherwise, e.g., [False, True, False, True]. It does not directly return the filtered values.",
+mcsc,Text,"Q15. In the BMI example, bmi = weights / (heights ** 2) is an example of:",,,,,,3,,Manual looping in Python,List concatenation,Vectorized elementwise computation,Matrix inversion,,,1,"bmi = weights / (heights ** 2) performs elementwise operations on entire arrays, a classic example of vectorized computation (no explicit Python loops).",
+Subjective,Text,"Write a Python program using NumPy to create a 1D array containing integers from 10 to 30 (inclusive). Then print: the array, its shape, its number of dimensions, its data type, and the total number of elements.",,,,,,,"arr = np.arange(10, 31)
+print(""Array:"", arr)print(""Shape:"", arr.shape)print(""Number of dimensions (ndim):"", arr.ndim)print(""Data type (dtype):"", arr.dtype)print(""Total number of elements (size):"", arr.size)
+
+
+",,,,,,,,"This code uses np.arange(10, 31) to create a 1D array of integers from 10 to 30 (inclusive). Then it prints key properties: shape (length along each dimension, here (21,)), ndim (number of dimensions, here 1), dtype (data type of elements, usually int64 or similar), and size (total number of elements, here 21). This question reinforces how to create basic arrays and inspect their structure and metadata.",
+Subjective,Text,"Create a 2D NumPy array of shape (3, 4) that contains the numbers 1 to 12 in row-major order. Then compute and print: (a) the sum of each row, (b) the sum of each column, and (c) the overall mean of all elements.",,,,,,,"
+# Create a 2D array of shape (3, 4) with numbers 1 to 12
+arr = np.arange(1, 13).reshape(3, 4)
+
+print(""Array:\n"", arr)
+
+# Sum of each row (axis=1)
+row_sums = arr.sum(axis=1)
+print(""Row sums:"", row_sums)
+
+# Sum of each column (axis=0)
+col_sums = arr.sum(axis=0)
+print(""Column sums:"", col_sums)
+
+# Overall mean of all elements
+overall_mean = arr.mean()
+print(""Overall mean:"", overall_mean)",,,,,,,,"The code first generates values from 1 to 12 using np.arange(1, 13) and reshapes them into a (3, 4) 2D array with .reshape(3, 4). Then: arr.sum(axis=1) computes the sum of each row, arr.sum(axis=0) computes the sum of each column, and arr.mean() computes the mean of all 12 elements. This illustrates how to work with 2D arrays and use axis to control the direction of aggregations.",
+Subjective,Text,"You are given two Python lists: heights = [1.70, 1.82, 1.60, 1.75, 1.90] (in meters) and weights = [65, 85, 50, 78, 95] (in kg). Convert them to NumPy arrays and compute the BMI for each person using vectorized operations. Then print all BMIs and also print only the BMIs greater than 25 using a boolean mask.",,,,,,,"import numpy as np
+
+# Given Python lists
+heights = [1.70, 1.82, 1.60, 1.75, 1.90]   # in meters
+weights = [65, 85, 50, 78, 95]             # in kg
+
+# Convert to NumPy arrays
+heights = np.array(heights, dtype=np.float32)
+weights = np.array(weights, dtype=np.float32)
+
+# Compute BMI = weight / (height^2) (vectorized)
+bmi = weights / (heights ** 2)
+
+print(""Heights (m):"", heights)
+print(""Weights (kg):"", weights)
+print(""BMI values:"", bmi)
+
+# Boolean mask for BMI > 25
+mask_over_25 = bmi > 25.0
+print(""Mask (BMI > 25):"", mask_over_25)
+
+# Print only BMI values > 25
+print(""BMI > 25:"", bmi[mask_over_25])",,,,,,,,"Heights and weights start as Python lists and are converted to NumPy arrays for numerical work. BMI is computed with weights / (heights ** 2) in a purely vectorized way: the operation is applied elementwise to every pair (weight[i], height[i]) without writing loops. Then a boolean mask bmi > 25.0 marks which entries exceed the threshold. Using this mask, bmi[mask_over_25] selects only the BMI values greater than 25. This question demonstrates vectorization for formulas and boolean masking/filtering for conditional selection.",
+Subjective,Text,"Write a NumPy program that creates a 2D array called scores of shape (5, 3), where each row represents a student and each column represents a test. Fill it with any integer values between 0 and 100. Then: (a) add 5 marks to every score (curve), (b) clip all values to the range [0, 100], and (c) print the average score of each student and each test.",,,,,,,"import numpy as np
+
+# Create a 2D array (5 students x 3 tests) with scores 0–100
+# You can choose any values; here we use random integers
+np.random.seed(0)  # for reproducibility
+scores = np.random.randint(0, 101, size=(5, 3))
+
+print(""Original scores:\n"", scores)
+
+# (a) Add 5 marks to every score
+curved_scores = scores + 5
+
+# (b) Clip all values to the range [0, 100]
+curved_scores = np.clip(curved_scores, 0, 100)
+
+print(""Curved and clipped scores:\n"", curved_scores)
+
+# (c) Average score of each student (row-wise)
+student_avg = curved_scores.mean(axis=1)
+print(""Average score per student:"", student_avg)
+
+# Average score of each test (column-wise)
+test_avg = curved_scores.mean(axis=0)
+print(""Average score per test:"", test_avg)",,,,,,,,"A random (5, 3) matrix of integers between 0 and 100 simulates scores of 5 students in 3 tests. Adding 5 (scores + 5) is a broadcasted scalar operation applied to every element. np.clip(curved_scores, 0, 100) ensures that scores stay within the 0–100 range (no overflow beyond maximum marks). mean(axis=1) gives the average score per student (row-wise) and mean(axis=0) gives average per test (column-wise). This question shows broadcasting, clipping, and using axis for statistics on rows vs columns.",
+Subjective,Text,"Create a large 1D NumPy array of size 1,000,000 using np.arange. Then: (a) write code that adds 1 to every element using a Python for-loop, (b) write code that adds 1 to every element using a vectorized NumPy operation, and (c) measure and print the time taken by both methods using time.time().",,,,,,,"import numpy as np
+import time
+
+# Create large 1D array of size 1,000,000
+n = 1_000_000
+arr = np.arange(n, dtype=np.int64)
+
+# --- Method 1: Python for-loop ---
+arr_loop = arr.copy()
+
+start_time = time.time()
+result_loop = []
+for x in arr_loop:
+    result_loop.append(x + 1)
+end_time = time.time()
+
+time_loop = end_time - start_time
+print(""Time taken by Python loop (seconds):"", time_loop)
+
+# Convert result_loop back to NumPy array if needed
+result_loop = np.array(result_loop, dtype=np.int64)
+
+# --- Method 2: Vectorized NumPy operation ---
+arr_vec = arr.copy()
+
+start_time = time.time()
+result_vec = arr_vec + 1  # vectorized addition
+end_time = time.time()
+
+time_vec = end_time - start_time
+print(""Time taken by NumPy vectorized operation (seconds):"", time_vec)
+
+# Optional: verify that both results are the same
+print(""Results equal:"", np.array_equal(result_loop, result_vec))",,,,,,,,"The code creates a large 1D array arr of size 1,000,000 using np.arange. Method 1 uses a Python for-loop, building a new list result_loop by adding 1 to each element one by one, then converts it to an array. Method 2 uses a single vectorized operation arr_vec + 1 to add 1 to every element at once. time.time() is used before and after each method to measure execution time. Typically, the vectorized version is much faster because it runs optimized C loops on contiguous memory, while the Python loop has large per-iteration overhead. The final np.array_equal check confirms both methods produce identical results.",
